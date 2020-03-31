@@ -16,19 +16,37 @@ public class Player : MonoBehaviour
     }
 
 
-    public void MovePlayer(int steps) {
+    public int MoveToNewStep(int steps) {
         if (currentStep + steps > 100) {
 
             //ToDo 
             //play sound
-            return;
+            return -1;
+        }else if (currentStep + steps == 100) { 
+            //ToDo
+            //Player has won
         }
         currentStep += steps;
-        int rows = currentStep % 10;
-        int cols = currentStep / 10;
-
-        Vector3 newPos = GameConstants.FirstBoxPosition + new Vector3(GameConstants.OneBoxDistance * rows, GameConstants.OneBoxDistance * cols, 0);
-        iTween.MoveTo(this.gameObject,iTween.Hash("position",newPos,"time",steps*0.1f));
+        return MovePlayer(steps);
     }
 
+    public void MoveToNewPositin(int newPosition) {
+        int steps = Mathf.Abs(currentStep - newPosition);
+        currentStep = newPosition;
+        MovePlayer(steps);
+    }
+
+    int MovePlayer(int steps) {
+
+        int rows = (currentStep - 1) / 10;
+        int cols = (currentStep - 1) % 10;
+        if (rows % 2 != 0)
+        {
+            cols = 9 - cols;
+        }
+
+        Vector3 newPos = GameConstants.FirstBoxPosition + new Vector3(GameConstants.OneBoxDistance * cols, GameConstants.OneBoxDistance * rows, 0);
+        iTween.MoveTo(this.gameObject, iTween.Hash("position", newPos, "time", steps * 0.1f));
+        return currentStep;
+    }
 }
