@@ -4,27 +4,14 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 
-public class UIHandler : MonoBehaviour
+public class UIHandler : SingletonMonoBehaviour<UIHandler>
 {
-    private static UIHandler myInstance = null;
+
     public GameObject Splash;
     public Button StartButton;
     public Button ResumeButton;
 
-    void Awake()
-    {
-        myInstance = this;
-    }
-
-    public static UIHandler getInstance()
-    {
-        if (myInstance == null)
-        {
-            myInstance = new UIHandler();
-        }
-        return myInstance;
-    }
-
+   
     void Start()
     {
         try {
@@ -40,18 +27,18 @@ public class UIHandler : MonoBehaviour
 
     public void StartGameButtonClick()
     {
-        if (!UIConstants.Instance.GameStarted) {
-            UIConstants.Instance.GameStarted = true;
+        if (!UIConstants.GameStarted) {
+            UIConstants.GameStarted = true;
             StartButton.gameObject.SetActive(false);
         }
-        GameAnimationManager.getInstance().AnimateBoardToGameCenter();
+        GameAnimationManager.Instance.AnimateBoardToGameCenter();
     }
 
 
     public void BackToStartMenu() {
-        if (UIConstants.Instance.GameStarted)
+        if (UIConstants.GameStarted)
         {
-            UIConstants.Instance.GameStarted = false;
+            UIConstants.GameStarted = false;
             StartButton.gameObject.SetActive(true);
         }
     }
@@ -74,8 +61,8 @@ public class UIHandler : MonoBehaviour
             Destroy(Splash);
         }
         StartButton.gameObject.SetActive(true);
-        GameStateManager.getInstance().SetGameState(GameStateManager.GameState.Menu);
-        iTween.ShakePosition(StartButton.gameObject,iTween.Hash("x",20,"time",1.2f));
+        GameStateManager.Instance.SetGameState(GameStateManager.GameState.Menu);
+        iTween.ShakePosition(StartButton.gameObject,iTween.Hash("x",30,"time",0.4f));
 
     }
 

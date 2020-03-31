@@ -2,17 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIConstants 
+public static class UIConstants 
 {
-    private static readonly UIConstants instance = new UIConstants();
-    public static UIConstants Instance
-    {
-        get
-        {
-            return instance;
-        }
-    }
-
+  
     public static string MissingReferenceTag = "UIReferenceMissing";
-    public bool GameStarted = false;
+
+    public static bool GameStarted = false;
 }

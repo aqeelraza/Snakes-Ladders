@@ -2,31 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameAnimationManager : MonoBehaviour
+public class GameAnimationManager : SingletonMonoBehaviour<GameAnimationManager>
 {
 
-    public GameObject GameBoard;
-    public Transform GameCenter;
-
-    private static GameAnimationManager myInstance = null;
-
-    void Awake()
-    {
-        myInstance = this;
-    }
-
-    public static GameAnimationManager getInstance()
-    {
-        if (myInstance == null)
-        {
-            myInstance = new GameAnimationManager();
-        }
-        return myInstance;
-    }
-
-
     public void AnimateBoardToGameCenter() {
-        GameStateManager.getInstance().SetGameState(GameStateManager.GameState.GameInProgress);
-        iTween.MoveTo(GameBoard, iTween.Hash("position",GameCenter.position,"time",1f));
+        GameStateManager.Instance.SetGameState(GameStateManager.GameState.GameInProgress);
+        GameBoard.Instance.Spawn();
+    }
+
+    public void AnimatePlayersSpawning() {
+        PlayerManager.Instance.SpawnPlayers();
     }
 }

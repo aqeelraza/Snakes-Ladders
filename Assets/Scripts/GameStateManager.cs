@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class GameStateManager : MonoBehaviour
+public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
 
     public enum GameState { 
@@ -13,25 +13,16 @@ public class GameStateManager : MonoBehaviour
         GamePause
     }
 
-    private static GameStateManager myInstance = null;
+
     GameState gameState;
 
-    void Awake()
-    {
-        myInstance = this;
-    }
 
-    public static GameStateManager getInstance() {
-        if(myInstance == null) {
-            myInstance = new GameStateManager();
-        }
-        return myInstance;
-    }
     
     void Start()
     {
         gameState = GameState.SplashLoading;
-        UIHandler.getInstance().WaitAndRemoveSplash();
+
+        UIHandler.Instance.WaitAndRemoveSplash();
 
     }
 
