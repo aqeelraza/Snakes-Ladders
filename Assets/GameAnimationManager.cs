@@ -16,4 +16,8 @@ public class GameAnimationManager : SingletonMonoBehaviour<GameAnimationManager>
     public void AnimateDice(int num) {
         DiceManager.Instance.RollDice(num);
     }
+
+    public void RemoveDice() {
+        DiceManager.Instance.RemoveDice();
+    }
 }

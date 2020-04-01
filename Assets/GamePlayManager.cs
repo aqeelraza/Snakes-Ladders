@@ -26,6 +26,8 @@ public class GamePlayManager : MonoBehaviour
         Player.ChangeTurn += ChangeTurn;
         UIHandler.StartGame += StartGame;
         UIHandler.RollDice += RollDice;
+        UIHandler.PauseGame += PauseGame;
+        UIHandler.ResumeGame += ResumeGame;
         try
         {
             GameConstants.FirstBoxPosition = FirstBox.position;
@@ -58,17 +60,26 @@ public class GamePlayManager : MonoBehaviour
     void ChangeTurn() {
         PlayerManager.Instance.ChangePlayer();
         UIHandler.Instance.ChangeRollDiceStatus();
+        GameAnimationManager.Instance.RemoveDice();
     }
 
     void RollDice() {
         int num = UnityEngine.Random.Range(1,7);
         GameAnimationManager.Instance.AnimateDice(num);
-        StartCoroutine(MovePlayer());
+        StartCoroutine(MovePlayer(num));
     }
 
-    IEnumerator MovePlayer() {
-        yield return new WaitForSeconds(2.0f);
-        PlayerManager.Instance.MovePlayer();
+    IEnumerator MovePlayer(int step) {
+        yield return new WaitForSeconds(1.5f);
+        GameStateManager.Instance.SetGameState(GameStateManager.GameState.PlayerMoving);
+        PlayerManager.Instance.MovePlayer(step);
+    }
+
+    public void PauseGame() {
+        Time.timeScale = 0;
+    }
+    public void ResumeGame() {
+        Time.timeScale = 1;
     }
 
 }

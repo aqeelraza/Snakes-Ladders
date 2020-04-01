@@ -15,6 +15,7 @@ public class DiceManager : SingletonMonoBehaviour<DiceManager>
         try {
             activeDice.GetComponent<SpriteRenderer>().enabled = true;
             activeDice.GetComponent<Animator>().enabled = true;
+            activeDice.GetComponent<Animator>().Play("Dice" + num, -1, 0f);
         }
         catch(NullReferenceException e)
         {

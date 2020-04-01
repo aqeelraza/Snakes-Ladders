@@ -30,9 +30,9 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
 
 
 
-    public void MovePlayer() {
+    public void MovePlayer(int step) {
 
-        int step = UnityEngine.Random.Range(1, 6);
+
         int playerNewStep = activePlayer.GetUpdatedStep(step);
         int SnakeOrLadderPos = CheckForSnakeOrLadder(playerNewStep);
         if(SnakeOrLadderPos != 0) {
