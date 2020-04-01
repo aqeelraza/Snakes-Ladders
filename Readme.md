@@ -20,3 +20,4 @@ Player.cs
 This class is for the functionality of the player. 
 
 
+The artwork used in this was purchased on Graphcis River and cannot be reused as I purchased one time license. 
