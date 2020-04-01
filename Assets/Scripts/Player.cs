@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     bool isPlayerMoving = false;
 
     public static event Action ChangeTurn;
+
     public void SpawnPlayer() {
         iTween.FadeFrom(this.gameObject, iTween.Hash("alpha", 0, "time", 1.0f, "easeType", "easeInSine", "oncomplete", "FadeToFullAlpha"));
 
@@ -24,9 +25,8 @@ public class Player : MonoBehaviour
             //ToDo 
             //play sound
             return -1;
-        }else if (currentStep + steps == 100) { 
-            //ToDo
-            //Player has won
+        }else if (currentStep + steps == 100) {
+            return 100;
         }
         currentStep += steps;
         return currentStep;

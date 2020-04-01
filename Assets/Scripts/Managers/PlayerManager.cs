@@ -7,7 +7,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
 {
 
     public static event Func<int, int> CheckForSnakeOrLadder;
-
+    public static event Action GameEnd;
 
 
     public GameObject PlayerHuman;
@@ -34,6 +34,11 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
 
 
         int playerNewStep = activePlayer.GetUpdatedStep(step);
+        if (playerNewStep ==100) {
+            GameConstants.WinningPlayer = activePlayer.name;
+            GameEnd();
+        }
+
         int SnakeOrLadderPos = CheckForSnakeOrLadder(playerNewStep);
         if(SnakeOrLadderPos != 0) {
             activePlayer.MovePlayer(SnakeOrLadderPos, true);

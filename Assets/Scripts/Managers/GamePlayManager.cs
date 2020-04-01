@@ -8,6 +8,7 @@ public class GamePlayManager : MonoBehaviour
 
     public Transform FirstBox;
     public Transform SecondBox;
+    bool gameEnd = false;
 
     class Connection {
         public int startStep;
@@ -23,11 +24,13 @@ public class GamePlayManager : MonoBehaviour
     void Start()
     {
         PlayerManager.CheckForSnakeOrLadder += CheckForSnakeOrLadder;
+        PlayerManager.GameEnd += GameEnd;
         Player.ChangeTurn += ChangeTurn;
         UIHandler.StartGame += StartGame;
         UIHandler.RollDice += RollDice;
         UIHandler.PauseGame += PauseGame;
         UIHandler.ResumeGame += ResumeGame;
+
         try
         {
             GameConstants.FirstBoxPosition = FirstBox.position;
@@ -38,6 +41,8 @@ public class GamePlayManager : MonoBehaviour
         }
 
     }
+
+
 
     int CheckForSnakeOrLadder(int currentStep)
     {
@@ -58,9 +63,16 @@ public class GamePlayManager : MonoBehaviour
 
 
     void ChangeTurn() {
-        PlayerManager.Instance.ChangePlayer();
-        UIHandler.Instance.ChangeRollDiceStatus();
-        GameAnimationManager.Instance.RemoveDice();
+        if (gameEnd)
+        {
+            UIHandler.Instance.ShowEndGamePanel();
+        }
+        else {
+            PlayerManager.Instance.ChangePlayer();
+            UIHandler.Instance.ChangeRollDiceStatus();
+            GameAnimationManager.Instance.RemoveDice();
+        }
+
     }
 
     void RollDice() {
@@ -81,5 +93,8 @@ public class GamePlayManager : MonoBehaviour
     public void ResumeGame() {
         Time.timeScale = 1;
     }
-
+    public void GameEnd()
+    {
+        gameEnd = true;
+    }
 }

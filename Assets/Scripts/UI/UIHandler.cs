@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIHandler : SingletonMonoBehaviour<UIHandler>
@@ -17,8 +18,9 @@ public class UIHandler : SingletonMonoBehaviour<UIHandler>
     public Button RollDiceButton;
     public Button RollDiceButtonDisabled;
     public Button HomePauseButton;
-
-
+    public GameObject EndGamePanel;
+    public Text EndGameText;
+    public Button QuitGameButton;
     void Start()
     {
         try {
@@ -27,6 +29,7 @@ public class UIHandler : SingletonMonoBehaviour<UIHandler>
             ResumeButton.onClick.AddListener(ResumeGameButtonClick);
             RollDiceButton.onClick.AddListener(RollDiceClick);
             HomePauseButton.onClick.AddListener(PauseGameButtonClick);
+            QuitGameButton.onClick.AddListener(EndGame);
             Splash.gameObject.SetActive(true);
         } catch(NullReferenceException e) {
             Debug.unityLogger.Log(UIConstants.MissingReferenceTag, e);
@@ -101,6 +104,16 @@ public class UIHandler : SingletonMonoBehaviour<UIHandler>
         RollDiceButtonDisabled.gameObject.SetActive(false);
         RollDiceButton.gameObject.SetActive(true);
         RollDiceButton.GetComponent<Button>().enabled = true;
+    }
+
+    public void ShowEndGamePanel()
+    {
+        EndGameText.text = GameConstants.WinningPlayer + "has won the game.";
+        EndGamePanel.SetActive(true);
+    }
+
+    public void EndGame() {
+        Application.Quit();
     }
 
 }
