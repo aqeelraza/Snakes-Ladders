@@ -23,6 +23,9 @@ public class GamePlayManager : MonoBehaviour
     void Start()
     {
         PlayerManager.CheckForSnakeOrLadder += CheckForSnakeOrLadder;
+        Player.ChangeTurn += ChangeTurn;
+        UIHandler.StartGame += StartGame;
+        UIHandler.RollDice += RollDice;
         try
         {
             GameConstants.FirstBoxPosition = FirstBox.position;
@@ -45,6 +48,27 @@ public class GamePlayManager : MonoBehaviour
             }
         }
         return 0;
+    }
+
+    void StartGame() {
+        GameAnimationManager.Instance.AnimateBoardToGameCenter();
+    }
+
+
+    void ChangeTurn() {
+        PlayerManager.Instance.ChangePlayer();
+        UIHandler.Instance.ChangeRollDiceStatus();
+    }
+
+    void RollDice() {
+        int num = UnityEngine.Random.Range(1,7);
+        GameAnimationManager.Instance.AnimateDice(num);
+        StartCoroutine(MovePlayer());
+    }
+
+    IEnumerator MovePlayer() {
+        yield return new WaitForSeconds(2.0f);
+        PlayerManager.Instance.MovePlayer();
     }
 
 }

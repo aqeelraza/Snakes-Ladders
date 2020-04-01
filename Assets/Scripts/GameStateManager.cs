@@ -10,6 +10,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         SplashLoading , 
         Menu,
         GameInProgress,
+        PlayerMoving,
         GamePause
     }
 
@@ -17,13 +18,10 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     GameState gameState;
 
 
-    
     void Start()
     {
         gameState = GameState.SplashLoading;
-
         UIHandler.Instance.WaitAndRemoveSplash();
-
     }
 
 

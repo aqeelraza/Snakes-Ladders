@@ -6,11 +6,14 @@ public class GameAnimationManager : SingletonMonoBehaviour<GameAnimationManager>
 {
 
     public void AnimateBoardToGameCenter() {
-        GameStateManager.Instance.SetGameState(GameStateManager.GameState.GameInProgress);
         GameBoard.Instance.Spawn();
     }
 
     public void AnimatePlayersSpawning() {
         PlayerManager.Instance.SpawnPlayers();
+    }
+
+    public void AnimateDice(int num) {
+        DiceManager.Instance.RollDice(num);
     }
 }

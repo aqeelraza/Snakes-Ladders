@@ -6,10 +6,14 @@ using UnityEngine.UI;
 
 public class UIHandler : SingletonMonoBehaviour<UIHandler>
 {
+    public static event Action StartGame;
+    public static event Action RollDice;
+
 
     public GameObject Splash;
     public Button StartButton;
     public Button ResumeButton;
+    public Button RollDiceButton;
 
    
     void Start()
@@ -18,7 +22,7 @@ public class UIHandler : SingletonMonoBehaviour<UIHandler>
 
             StartButton.onClick.AddListener(StartGameButtonClick);
             //ResumeButton.onClick.AddListener(ResumeGameButtonClick);
-
+            RollDiceButton.onClick.AddListener(RollDiceClick);
             Splash.gameObject.SetActive(true);
         } catch(NullReferenceException e) {
             Debug.unityLogger.Log(UIConstants.MissingReferenceTag, e);
@@ -31,9 +35,14 @@ public class UIHandler : SingletonMonoBehaviour<UIHandler>
             UIConstants.GameStarted = true;
             StartButton.gameObject.SetActive(false);
         }
-        GameAnimationManager.Instance.AnimateBoardToGameCenter();
-    }
+        GameStateManager.Instance.SetGameState(GameStateManager.GameState.GameInProgress);
+        Invoke("ShowDiceButton",1.0f);
 
+        StartGame();
+    }
+    void ShowDiceButton() {
+        RollDiceButton.gameObject.SetActive(true);
+    }
 
     public void BackToStartMenu() {
         if (UIConstants.GameStarted)
@@ -64,6 +73,15 @@ public class UIHandler : SingletonMonoBehaviour<UIHandler>
         GameStateManager.Instance.SetGameState(GameStateManager.GameState.Menu);
         iTween.ShakePosition(StartButton.gameObject,iTween.Hash("x",30,"time",0.4f));
 
+    }
+
+    public void RollDiceClick() {
+        RollDiceButton.GetComponent<Button>().enabled = false;
+        RollDice();
+    }
+
+    public void ChangeRollDiceStatus() {
+        RollDiceButton.GetComponent<Button>().enabled = true;
     }
 
 }

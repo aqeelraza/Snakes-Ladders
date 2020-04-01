@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class Player : MonoBehaviour
 {
     int currentStep = 0;
+    bool isPlayerMoving = false;
 
+    public static event Action ChangeTurn;
     public void SpawnPlayer() {
         iTween.FadeFrom(this.gameObject, iTween.Hash("alpha", 0, "time", 1.0f, "easeType", "easeInSine", "oncomplete", "FadeToFullAlpha"));
 
@@ -16,7 +18,7 @@ public class Player : MonoBehaviour
     }
 
 
-    public int MoveToNewStep(int steps) {
+    public int GetUpdatedStep(int steps) {
         if (currentStep + steps > 100) {
 
             //ToDo 
@@ -27,16 +29,16 @@ public class Player : MonoBehaviour
             //Player has won
         }
         currentStep += steps;
-        return MovePlayer(steps);
+        return currentStep;
     }
 
     public void MoveToNewPositin(int newPosition) {
         int steps = Mathf.Abs(currentStep - newPosition);
         currentStep = newPosition;
-        MovePlayer(steps);
+        MovePlayer(steps,false);
     }
 
-    int MovePlayer(int steps) {
+    public void MovePlayer(int step,bool isSnakeOrLadder) {
 
         int rows = (currentStep - 1) / 10;
         int cols = (currentStep - 1) % 10;
@@ -46,7 +48,17 @@ public class Player : MonoBehaviour
         }
 
         Vector3 newPos = GameConstants.FirstBoxPosition + new Vector3(GameConstants.OneBoxDistance * cols, GameConstants.OneBoxDistance * rows, 0);
-        iTween.MoveTo(this.gameObject, iTween.Hash("position", newPos, "time", steps * 0.1f));
-        return currentStep;
+        isPlayerMoving = true;
+        if (!isSnakeOrLadder) {
+            iTween.MoveTo(this.gameObject, iTween.Hash("position", newPos, "time", step * GameConstants.PlayerMovementSpeed, "oncomplete", "OnMovementComplete"));
+        }
+        else {
+            iTween.MoveTo(this.gameObject, iTween.Hash("position", newPos, "time", step * GameConstants.PlayerMovementSpeed));
+        }
+    }
+
+    void OnMovementComplete() {
+        isPlayerMoving = false;
+        ChangeTurn();
     }
 }
