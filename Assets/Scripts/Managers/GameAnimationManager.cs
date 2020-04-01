@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// A very simple class to handle the in game animations.
+/// </summary>
 public class GameAnimationManager : SingletonMonoBehaviour<GameAnimationManager>
 {
 

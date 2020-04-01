@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// This class is where players are being managed.
+/// Right now only two players are here but we can add more players and update the logic.
+/// </summary>
 public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
 {
 
@@ -13,7 +16,7 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
     public GameObject PlayerHuman;
     public GameObject PlayerAI;
 
-    Player activePlayer;
+    public Player activePlayer;
 
     private void Start()
     {
@@ -22,7 +25,6 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
     public void SpawnPlayers() {
         PlayerHuman.SetActive(true);
         PlayerAI.SetActive(true);
-
         PlayerHuman.GetComponent<Player>().SpawnPlayer();
         PlayerAI.GetComponent<Player>().SpawnPlayer();
         activePlayer = PlayerHuman.GetComponent<Player>();
@@ -31,8 +33,6 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
 
 
     public void MovePlayer(int step) {
-
-
         int playerNewStep = activePlayer.GetUpdatedStep(step);
         if (playerNewStep ==100) {
             GameConstants.WinningPlayer = activePlayer.name;
@@ -54,20 +54,24 @@ public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
     {
         yield return new WaitForSeconds(seconds);
         activePlayer.MoveToNewPositin(SnakeOrLadderPos);
-
     }
 
 
 
     public void ChangePlayer() { 
 
-        if(activePlayer.name.Equals("PlayerHuman"))
+        if(activePlayer.name.Equals("Player1"))
         {
             activePlayer = PlayerAI.GetComponent<Player>();
         }
         else {
             activePlayer = PlayerHuman.GetComponent<Player>();
         }
+    }
+
+    public void ResetPlayers() {
+        PlayerHuman.GetComponent<Player>().ResetPlayer();
+        PlayerAI.GetComponent<Player>().ResetPlayer();
     }
 
 }

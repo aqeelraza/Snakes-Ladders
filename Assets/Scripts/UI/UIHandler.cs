@@ -4,13 +4,16 @@ using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+/// <summary>
+/// Main class to handle all the UI events. 
+/// </summary>
 public class UIHandler : SingletonMonoBehaviour<UIHandler>
 {
     public static event Action StartGame;
     public static event Action RollDice;
     public static event Action PauseGame;
     public static event Action ResumeGame;
+    public static event Action RestartGame;
 
     public GameObject Splash;
     public Button StartButton;
@@ -21,15 +24,18 @@ public class UIHandler : SingletonMonoBehaviour<UIHandler>
     public GameObject EndGamePanel;
     public Text EndGameText;
     public Button QuitGameButton;
+    public Text PlayerTurnNote;
+    public Button RestartGameButton;
+
     void Start()
     {
         try {
-
             StartButton.onClick.AddListener(StartGameButtonClick);
             ResumeButton.onClick.AddListener(ResumeGameButtonClick);
             RollDiceButton.onClick.AddListener(RollDiceClick);
             HomePauseButton.onClick.AddListener(PauseGameButtonClick);
             QuitGameButton.onClick.AddListener(EndGame);
+            RestartGameButton.onClick.AddListener(RestartGameClick);
             Splash.gameObject.SetActive(true);
         } catch(NullReferenceException e) {
             Debug.unityLogger.Log(UIConstants.MissingReferenceTag, e);
@@ -44,12 +50,12 @@ public class UIHandler : SingletonMonoBehaviour<UIHandler>
         }
         GameStateManager.Instance.SetGameState(GameStateManager.GameState.GameStarted);
         Invoke("ShowGameButtons",1.0f);
-
         StartGame();
     }
     void ShowGameButtons() {
         RollDiceButton.gameObject.SetActive(true);
         HomePauseButton.gameObject.SetActive(true);
+        PlayerTurnNote.gameObject.SetActive(true);
     }
 
     public void BackToStartMenu() {
@@ -86,7 +92,7 @@ public class UIHandler : SingletonMonoBehaviour<UIHandler>
             Destroy(Splash);
         }
         StartButton.gameObject.SetActive(true);
-        GameStateManager.Instance.SetGameState(GameStateManager.GameState.Menu);
+        GameStateManager.Instance.SetGameState(GameStateManager.GameState.StartMenu);
         iTween.ShakePosition(StartButton.gameObject,iTween.Hash("x",30,"time",0.4f));
 
     }
@@ -108,10 +114,32 @@ public class UIHandler : SingletonMonoBehaviour<UIHandler>
 
     public void ShowEndGamePanel()
     {
+        GameStateManager.Instance.SetGameState(GameStateManager.GameState.GameEnd);
         EndGameText.text = GameConstants.WinningPlayer + "has won the game.";
         EndGamePanel.SetActive(true);
     }
 
+    public void ShowTurnText(string text) {
+        if (text.Contains("1")) {
+            PlayerTurnNote.color = Color.blue;
+        }
+        else {
+            PlayerTurnNote.color = Color.red;
+        }
+        PlayerTurnNote.text = text;
+    }
+    public void ResetUI()
+    {
+        PlayerTurnNote.text = "";
+        RollDiceButton.gameObject.SetActive(true);
+        RollDiceButton.GetComponent<Button>().enabled = true;
+        RollDiceButtonDisabled.gameObject.SetActive(false);
+        EndGamePanel.gameObject.SetActive(false);
+        GameStateManager.Instance.SetGameState(GameStateManager.GameState.StartMenu);
+    }
+    public void RestartGameClick() {
+        RestartGame();
+    }
     public void EndGame() {
         Application.Quit();
     }

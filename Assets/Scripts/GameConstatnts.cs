@@ -4,7 +4,6 @@ using UnityEngine;
 
 public static class GameConstants
 {
-
     public static string MissingReferenceTag = "GameReferenceMissing";
     public static string MissingGOTag = "CannotFindGameObject";
     public static float OneBoxDistance = 0.0f;

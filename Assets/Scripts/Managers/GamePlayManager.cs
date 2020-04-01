@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+
+/// <summary>
+/// This is the main class which handles the game logic.
+/// Gets the input from UI events
+/// Run Animations
+/// Manages Players and turns
+/// </summary>
 public class GamePlayManager : MonoBehaviour
 {
 
@@ -18,6 +25,7 @@ public class GamePlayManager : MonoBehaviour
             endStep = _endStep;
         }
     }
+    //These are hard code values for snake and ladders connections , they are hard coded after setting up the board.
     Connection[] Snakes = { new Connection(15,4), new Connection(36,26) , new Connection(69,48), new Connection(94,67), new Connection(97,39) };
     Connection[] Ladders = { new Connection(3, 23), new Connection(14, 33), new Connection(41,58), new Connection(47, 98), new Connection(71, 90) };
 
@@ -30,7 +38,7 @@ public class GamePlayManager : MonoBehaviour
         UIHandler.RollDice += RollDice;
         UIHandler.PauseGame += PauseGame;
         UIHandler.ResumeGame += ResumeGame;
-
+        UIHandler.RestartGame += RestartGame;
         try
         {
             GameConstants.FirstBoxPosition = FirstBox.position;
@@ -42,12 +50,12 @@ public class GamePlayManager : MonoBehaviour
 
     }
 
-
-
+    //This function basically checks if the player had landed on the snake or ladder
     int CheckForSnakeOrLadder(int currentStep)
     {
         for (int i = 0;i<Snakes.Length;i++) { //because snakes and ladders are equal
             if (currentStep == Snakes[i].startStep) {
+
                 return Snakes[i].endStep;
             }else if (currentStep == Ladders[i].startStep)
             {
@@ -59,6 +67,7 @@ public class GamePlayManager : MonoBehaviour
 
     void StartGame() {
         GameAnimationManager.Instance.AnimateBoardToGameCenter();
+        UIHandler.Instance.ShowTurnText("Player1 turn ");
     }
 
 
@@ -69,10 +78,10 @@ public class GamePlayManager : MonoBehaviour
         }
         else {
             PlayerManager.Instance.ChangePlayer();
+            UIHandler.Instance.ShowTurnText(PlayerManager.Instance.activePlayer.name  +" turn");
             UIHandler.Instance.ChangeRollDiceStatus();
             GameAnimationManager.Instance.RemoveDice();
         }
-
     }
 
     void RollDice() {
@@ -96,5 +105,12 @@ public class GamePlayManager : MonoBehaviour
     public void GameEnd()
     {
         gameEnd = true;
+    }
+
+    public void RestartGame() {
+        gameEnd = false;
+        PlayerManager.Instance.ResetPlayers();
+        DiceManager.Instance.RemoveDice();
+        UIHandler.Instance.ResetUI();
     }
 }

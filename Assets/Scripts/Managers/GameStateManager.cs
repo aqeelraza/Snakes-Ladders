@@ -8,13 +8,13 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     public enum GameState { 
         SplashLoading, 
-        Menu,
+        StartMenu,
         GameStarted,
         RollDiced,
         PlayerMoving,
         WaitingForDiceToRoll,
         GamePause,
-        GameResumed
+        GameEnd
     }
 
     GameState gameState;
@@ -28,6 +28,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     }
 
     public void SetGameState(GameState _gameState) {
+        Debug.Log(_gameState);
         previousGameState = gameState;
         this.gameState = _gameState;
     }
@@ -35,6 +36,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     public GameState GetGameState() {
         return gameState;
     }
+
     public void SetPreviousState() {
         GameState tempState = gameState;
         gameState = previousGameState;
