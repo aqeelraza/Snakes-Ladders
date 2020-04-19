@@ -6,22 +6,27 @@ using UnityEngine;
 /// This class is where players are being managed.
 /// Right now only two players are here but we can add more players and update the logic.
 /// </summary>
-public class PlayerManager : SingletonMonoBehaviour<PlayerManager>
+public class PlayerManager : MonoBehaviour
 {
 
     public static event Func<int, int> CheckForSnakeOrLadder;
     public static event Action GameEnd;
-
+    public static Player activePlayer { get; private set; }
 
     public GameObject PlayerHuman;
     public GameObject PlayerAI;
 
-    public Player activePlayer;
+
 
     private void Start()
     {
+        GameAnimationManager.SpawnPlayers += SpawnPlayers;
+        GamePlayManager.ChangePlayer += ChangePlayer;
+        GamePlayManager.MovePlayerAction += MovePlayer;
+        GamePlayManager.ResetPlayers += ResetPlayers;
         activePlayer = PlayerHuman.GetComponent<Player>();
     }
+
     public void SpawnPlayers() {
         PlayerHuman.SetActive(true);
         PlayerAI.SetActive(true);

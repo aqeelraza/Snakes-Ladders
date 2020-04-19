@@ -7,10 +7,11 @@ using System;
 /// </summary>
 public class Player : MonoBehaviour
 {
-    int currentStep = 0;
-    bool isPlayerMoving = false;
 
     public static event Action ChangeTurn;
+    //Private memebers
+    int currentStep = 0;
+    bool isPlayerMoving = false;
     Vector3 originalPosition;
     private void Start()
     {
@@ -69,6 +70,7 @@ public class Player : MonoBehaviour
         isPlayerMoving = false;
         ChangeTurn();
     }
+
     public void ResetPlayer()
     {
         transform.position = originalPosition;

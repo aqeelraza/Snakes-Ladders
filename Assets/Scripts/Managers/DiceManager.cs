@@ -5,9 +5,15 @@ using System;
 /// <summary>
 /// Simple manager to show Dice and run its animations.
 /// </summary>
-public class DiceManager : SingletonMonoBehaviour<DiceManager>
+public class DiceManager : MonoBehaviour
 {
     GameObject activeDice;
+    private void Start()
+    {
+        GameAnimationManager.RollDice += RollDice;
+        GameAnimationManager.RemoveDiceAction += RemoveDice;
+    }
+
     public void RollDice(int num) {
         activeDice = GameObject.Find("Dice" + num);
         try {

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
+public class GameStateManager : MonoBehaviour
 {
+
 
     public enum GameState { 
         SplashLoading, 
@@ -17,25 +18,28 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         GameEnd
     }
 
-    GameState gameState;
+
+    public static Action WaitAndRemoveSplash;
+    public GameState gameState { get; private set; }
     GameState previousGameState; 
 
     void Start()
-    {   
+    {
+        GamePlayManager.UpdateGameState += SetGameState;
+        UIHandler.UpdateGameState += SetGameState;
+        UIHandler.SetPreviousState += SetPreviousState;
         previousGameState = GameState.SplashLoading;
         gameState = GameState.SplashLoading;
-        UIHandler.Instance.WaitAndRemoveSplash();
+        if (WaitAndRemoveSplash!=null) {
+            WaitAndRemoveSplash();
+        }
     }
 
     public void SetGameState(GameState _gameState) {
-        Debug.Log(_gameState);
         previousGameState = gameState;
         this.gameState = _gameState;
     }
 
-    public GameState GetGameState() {
-        return gameState;
-    }
 
     public void SetPreviousState() {
         GameState tempState = gameState;

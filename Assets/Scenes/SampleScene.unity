@@ -1219,7 +1219,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerHuman: {fileID: 1300208323}
   PlayerAI: {fileID: 2002261268}
-  activePlayer: {fileID: 0}
 --- !u!1 &660546738
 GameObject:
   m_ObjectHideFlags: 0
@@ -3607,6 +3606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameCenter: {fileID: 490604215}
+  gameAnimatorObject: {fileID: 680398859}
 --- !u!1 &2042601644
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,17 @@ using System;
 public class GamePlayManager : MonoBehaviour
 {
 
+    public static Action<GameStateManager.GameState> UpdateGameState;
+    public static Action<string> ShowTurnText;
+    public static Action ShowEndGamePanel;
+    public static Action ChangeRollDiceStatus;
+    public static Action ResetUI;
+    public static Action ChangePlayer;
+    public static Action<int> MovePlayerAction;
+    public static Action ResetPlayers;
+    public static Action<int> AnimateDice;
+    public static Action AnimateBoardToGameCenter;
+    public static Action RemoveDice;
 
     public Transform FirstBox;
     public Transform SecondBox;
@@ -66,34 +77,55 @@ public class GamePlayManager : MonoBehaviour
     }
 
     void StartGame() {
-        GameAnimationManager.Instance.AnimateBoardToGameCenter();
-        UIHandler.Instance.ShowTurnText("Player1 turn ");
+        if (AnimateBoardToGameCenter != null) {
+            AnimateBoardToGameCenter();
+        }
+        ShowTurnText("Player1 turn");
+
     }
 
 
     void ChangeTurn() {
         if (gameEnd)
         {
-            UIHandler.Instance.ShowEndGamePanel();
+            if (ShowEndGamePanel != null) {
+                ShowEndGamePanel();
+            }
         }
         else {
-            PlayerManager.Instance.ChangePlayer();
-            UIHandler.Instance.ShowTurnText(PlayerManager.Instance.activePlayer.name  +" turn");
-            UIHandler.Instance.ChangeRollDiceStatus();
-            GameAnimationManager.Instance.RemoveDice();
+            if (ChangePlayer != null) {
+                ChangePlayer();
+            }
+            ShowTurnText(PlayerManager.activePlayer.name  +" turn");
+            if (ChangeRollDiceStatus != null) {
+                ChangeRollDiceStatus();
+            }
+            if (RemoveDice != null) {
+                RemoveDice();
+            }
+
         }
     }
 
     void RollDice() {
         int num = UnityEngine.Random.Range(1,7);
-        GameAnimationManager.Instance.AnimateDice(num);
+        if (AnimateDice != null) {
+            AnimateDice(num);
+        }
+
         StartCoroutine(MovePlayer(num));
     }
 
     IEnumerator MovePlayer(int step) {
         yield return new WaitForSeconds(1.5f);
-        GameStateManager.Instance.SetGameState(GameStateManager.GameState.PlayerMoving);
-        PlayerManager.Instance.MovePlayer(step);
+        if (UpdateGameState != null)
+        {
+            UpdateGameState(GameStateManager.GameState.PlayerMoving);
+        }
+        if (MovePlayerAction != null) {
+            MovePlayerAction(step);
+        }
+
     }
 
     public void PauseGame() {
@@ -109,8 +141,13 @@ public class GamePlayManager : MonoBehaviour
 
     public void RestartGame() {
         gameEnd = false;
-        PlayerManager.Instance.ResetPlayers();
-        DiceManager.Instance.RemoveDice();
-        UIHandler.Instance.ResetUI();
+        if (ResetPlayers != null) {
+            ResetPlayers();
+        }
+        if(RemoveDice != null) {
+            RemoveDice();
+        }
+
+        ResetUI();
     }
 }
